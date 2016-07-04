@@ -4,6 +4,8 @@ import NextPage from 'material-ui/svg-icons/navigation/chevron-right';
 import FirstPage from 'material-ui/svg-icons/navigation/first-page';
 import LastPage from 'material-ui/svg-icons/navigation/last-page';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import theme from 'material-ui/styles/baseThemes/lightBaseTheme';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import PageButton from './PageButton';
 import getPagination from './getPagination';
 import {FlatButton} from 'material-ui';
@@ -94,7 +96,7 @@ export default class Pagination extends React.Component {
 
 
         return (
-            <MuiThemeProvider>
+            <MuiThemeProvider muiTheme={getMuiTheme(theme)}>
                 <div style={warpStyle}>
                     {itemPage}
                 </div>
