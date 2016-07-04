@@ -21,7 +21,7 @@ const App = React.createClass({
         return (
             <div>
                 <button onClick={()=>{this.setState({items:this.state.items+1});}}>+</button>
-                <Pagination onSelect={this.onSelect} next first last prev {...this.state}/>
+                <Pagination onSelect={this.onSelect} ellipsis next first last prev {...this.state}/>
             </div>
 
         )
