@@ -12,54 +12,80 @@ export default class Pagination extends React.Component {
     constructor(props) {
         super(props);
         this.pageClick = this.pageClick.bind(this);
-        const {items,last,first} = props;
-        this.state = {
-            items: items ? items : 0,
-            first: first ? first : false,
-            last: last ? last : false
+        var defaultState = {
+            items: 0,
+            next: false,
+            prev: false,
+            first: false,
+            last: false,
+            warpStyle: {},
+            maxButton: 5,
+            buttonStyle: {minWidth: 'auto', width: '36px'},
+            activePage: 1,
+            activePageStyle: {color:'#2196f3'},
+            onSelect: null,
+            ellipsis: ''
         };
+        this.state = Object.assign({}, defaultState, this.props);
     }
 
     componentWillReceiveProps(nextProps) {
-        const {items,last,first} = nextProps;
-        this.setState({
-            items: items ? items : 0,
-            first: first ? first : false,
-            last: last ? last : false
-        });
+        this.setState(Object.assign({}, this.state, nextProps));
     }
 
     pageClick(index) {
-        console.log(index);
+        this.setState({
+            activePage : index
+        });
+        this.props.onSelect ? this.props.onSelect(index) : 0;
     }
 
     render() {
-        const style = {
-            minWidth: '36px'
-        };
         const IconStyle = {
             verticalAlign: 'middle'
         };
+        const style = this.state.buttonStyle;
+        const {first,prev,next,last,activePage,activePageStyle} = this.state;
         const itemPage = [];
-        for (let i = 1, max = this.props.items; i <= max; i++) {
-            itemPage.push(<FlatButton style={style} label={i} key={i} onTouchTap={()=>{this.pageClick(i)}}/>);
+
+        first ? itemPage.push(
+            <FlatButton key='first' style={style} onTouchTap={()=>{this.pageClick(1)}}>
+                <FirstPage style={IconStyle}/>
+            </FlatButton>
+        ) : 0;
+        prev ? itemPage.push(
+            <FlatButton key='prev' style={style}>
+                <PrevPage style={IconStyle}/>
+            </FlatButton>
+        ) : 0;
+        for (let i = 1, max = this.state.items; i <= max; i++) {
+            let _style = style;
+            if(i===activePage){
+                _style = Object.assign({},_style,activePageStyle);
+            }
+            itemPage.push(<FlatButton style={_style} label={i} key={i} onTouchTap={()=>{this.pageClick(i)}}/>);
         }
+
+        next ? itemPage.push(
+            <FlatButton key='next' style={style}>
+                <NextPage style={IconStyle}/>
+            </FlatButton>
+        ):0;
+
+        last ? itemPage.push(
+            <FlatButton key='last' style={style}>
+                <LastPage style={IconStyle}/>
+            </FlatButton>
+        ):0;
+
+
         return (
             <MuiThemeProvider muiTheme={getMuiTheme(theme)}>
                 <div>
-                    <FlatButton style={style} onTouchTap={()=>{this.pageClick(1)}}>
-                        <FirstPage style={IconStyle}/>
-                    </FlatButton>
-                    <FlatButton style={style}>
-                        <PrevPage style={IconStyle}/>
-                    </FlatButton>
+
                     {itemPage}
-                    <FlatButton style={style}>
-                        <NextPage style={IconStyle}/>
-                    </FlatButton>
-                    <FlatButton style={style}>
-                        <LastPage style={IconStyle}/>
-                    </FlatButton>
+
+
                 </div>
             </MuiThemeProvider>
         )

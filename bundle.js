@@ -13,7 +13,7 @@ const App = React.createClass({
         return (
             <div>
                 <button onClick={()=>{this.setState({items:this.state.items+1});}}>+</button>
-                <Pagination items={this.state.items}/>
+                <Pagination prev next items={this.state.items}/>
             </div>
         )
     }
