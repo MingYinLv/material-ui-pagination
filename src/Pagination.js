@@ -4,8 +4,8 @@ import NextPage from 'material-ui/svg-icons/navigation/chevron-right';
 import FirstPage from 'material-ui/svg-icons/navigation/first-page';
 import LastPage from 'material-ui/svg-icons/navigation/last-page';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import theme from 'material-ui/styles/baseThemes/lightBaseTheme';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import PageButton from './PageButton';
+import getPagination from './getPagination';
 import {FlatButton} from 'material-ui';
 
 export default class Pagination extends React.Component {
@@ -20,72 +20,83 @@ export default class Pagination extends React.Component {
             last: false,
             warpStyle: {},
             maxButton: 5,
-            buttonStyle: {minWidth: 'auto', width: '36px'},
+            buttonStyle: {minWidth: '36px'},
             activePage: 1,
-            activePageStyle: {color:'#2196f3'},
+            activePageStyle: {color: '#2196f3'},
             onSelect: null,
-            ellipsis: ''
+            ellipsis: false
         };
         this.state = Object.assign({}, defaultState, this.props);
     }
-
     componentWillReceiveProps(nextProps) {
         this.setState(Object.assign({}, this.state, nextProps));
     }
 
     pageClick(index) {
-        this.setState({
-            activePage : index
-        });
         this.props.onSelect ? this.props.onSelect(index) : 0;
     }
-
     render() {
         const IconStyle = {
             verticalAlign: 'middle'
         };
         const style = this.state.buttonStyle;
-        const {first,prev,next,last,activePage,activePageStyle} = this.state;
-        const itemPage = [];
+        const {first,prev,next,last,activePage,activePageStyle,warpStyle,items,maxButton,ellipsis} = this.state;
 
+        let {begin,end,leftEllipsis,rightEllipsis} = getPagination({
+            activePage,
+            items,
+            maxButton,
+            ellipsis
+        });
+        const itemPage = [];
+        //第一页
         first ? itemPage.push(
-            <FlatButton key='first' style={style} onTouchTap={()=>{this.pageClick(1)}}>
+            <FlatButton key='first' style={style} onClick={()=>{this.pageClick(1)}}>
                 <FirstPage style={IconStyle}/>
             </FlatButton>
         ) : 0;
+        //上一页
+        let prevPage = activePage > 1 ? activePage - 1 : 1;
         prev ? itemPage.push(
-            <FlatButton key='prev' style={style}>
+            <FlatButton key='prev' style={style} onClick={()=>{this.pageClick(prevPage)}}>
                 <PrevPage style={IconStyle}/>
             </FlatButton>
         ) : 0;
-        for (let i = 1, max = this.state.items; i <= max; i++) {
+        if (leftEllipsis) {
+            //itemPage.push(<FlatButton key={1} label='1' style={style} />);
+            itemPage.push(<FlatButton onClick={()=>{this.pageClick(begin-1)}} key='leftEllipsis' label='...' style={style}/>);
+        }
+        for (let i = begin, max = end; i <= max; i++) {
             let _style = style;
-            if(i===activePage){
-                _style = Object.assign({},_style,activePageStyle);
+            if (i === activePage) {
+                _style = Object.assign({}, _style, activePageStyle);
             }
-            itemPage.push(<FlatButton style={_style} label={i} key={i} onTouchTap={()=>{this.pageClick(i)}}/>);
+            itemPage.push(<PageButton style={_style} pageNo={i} key={i} pageClick={this.pageClick}/>);
+        }
+        if (rightEllipsis) {
+            itemPage.push(<FlatButton onClick={()=>{this.pageClick(end+1)}} key='rightEllipsis' label='...' style={style}/>);
+            //itemPage.push(<FlatButton key={items} label={items} style={style} />);
         }
 
+        //下一页
+        let nextPage = activePage < items ? activePage + 1 : items;
         next ? itemPage.push(
-            <FlatButton key='next' style={style}>
+            <FlatButton key='next' style={style} onClick={()=>{this.pageClick(nextPage)}}>
                 <NextPage style={IconStyle}/>
             </FlatButton>
-        ):0;
-
+        ) : 0;
+        //最后一页
         last ? itemPage.push(
-            <FlatButton key='last' style={style}>
+            <FlatButton key='last' style={style} onClick={()=>{this.pageClick(items)}}>
                 <LastPage style={IconStyle}/>
             </FlatButton>
-        ):0;
+        ) : 0;
 
 
         return (
-            <MuiThemeProvider muiTheme={getMuiTheme(theme)}>
-                <div>
-
+            <MuiThemeProvider>
+                <div style={warpStyle}>
                     {itemPage}
-
-
                 </div>
             </MuiThemeProvider>
         )
