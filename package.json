@@ -9,7 +9,7 @@
   "author": "lvmingyin",
   "license": "ISC",
   "dependencies": {
-    
+
   },
   "devDependencies": {
     "babel-core": "^6.3.15",
