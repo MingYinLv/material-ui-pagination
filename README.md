@@ -2,7 +2,7 @@
  
 maerial-ui的分页插件。
 
-[material-ui](http://www.material-ui.com/)官网没有提供相应的分页插件，找到一个但是没有文档，所以干脆自己写了一个，第一次写代码有点乱，差不多可以用。
+[material-ui](http://www.material-ui.com)
 
 |字段名|类型|默认值|说明|
 |-------|-----|------|-----------|
