@@ -18,8 +18,3 @@ maerial-ui的分页插件。
 | activePageStyle | object |  | 选中页码的样式 |
 | onSelect | function |  | 点击页码的回调事件 |
 | ellipsis | bool | false | 设置为 true, 当 items > maxButton 时，智能显示 ... 按钮 |
-
-`npm install --save git+ssh://git@github.com/lvmingyin/material-ui-pagination.git`
-
-`import Pagination from 'material-ui-pagination'`
-` <Pagination onSelect={this.onSelect} ellipsis next first last prev {...this.state}/>`
